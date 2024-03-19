@@ -1,0 +1,9 @@
+﻿.profile-head {
+    background-image: url(@Url.Content("~/assets/imgs/userImage.jpg"));
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+textarea {
+    resize: none;
+}

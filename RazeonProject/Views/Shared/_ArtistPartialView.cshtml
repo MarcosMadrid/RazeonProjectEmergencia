@@ -1,0 +1,19 @@
+﻿@model List<User>
+
+@foreach (var artist in Model)
+{
+    <div class="col-md-3">
+        <div class="card flex-md-row mb-4 box-shadow h-md-250">
+            <div class="card-body d-flex flex-column align-items-start">
+                <strong class="d-inline-block mb-2 text-primary">@artist.Name</strong>
+                <h3 class="mb-0">
+                    <a class="text-dark" href="#">@artist.Name</a>
+                </h3>
+                <div class="mb-1 text-muted">@artist.BirthDate</div>
+                <p class="card-text mb-auto">@artist.Email</p>
+                <a href="#">Continue reading</a>
+            </div>
+            <img class="card-img-right flex-auto d-none d-md-block" src="data:image/jpeg;base64,@Convert.ToBase64String(artist.Image!)" alt="Thumbnail [200x250]" style="width: 200px; height: 250px;" data-holder-rendered="true">
+        </div>
+    </div>
+}

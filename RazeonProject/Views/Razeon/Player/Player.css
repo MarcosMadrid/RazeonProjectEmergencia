@@ -1,0 +1,17 @@
+﻿#fullScreenPlayer {
+    background-image: url("https://wallpapercave.com/wp/wp3803476.jpg");
+    background-position: center;
+    background-size: cover;
+}
+
+#cardMusicfullScreen {
+    transition: ease-in-out all 0.1s;
+}
+
+#playerDiv {
+    height: 12vh;
+}
+
+#playerDiv bi {
+    transition: persist;
+}

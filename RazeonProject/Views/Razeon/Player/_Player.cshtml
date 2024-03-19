@@ -1,0 +1,102 @@
+﻿<div id="fullScreenPlayer" class="d-none" >
+    <div class="fixed-bottom container-fluid">
+        <div class="row mb-5 pb-5">
+            <div class="d-flex row p-5 m-5 pb-2 mb-2">
+                <div class="card col-7 bg-transparent border-0" id="cardMusicfullScreen">
+                    <div class="d-flex">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <img src="..." class="img-fluid rounded-2" style="width:200px; height:200px" alt="...">
+                        </div>
+                        <div class="d-flex align-items-end ms-3">
+                            <div class="card-body">
+                                <h5 class="card-title m-0 playerMusicTitle">Music title</h5>
+                                <p class="card-text"><small class="text-body-secondary playerArtistData">Artist</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center align-items-center m-0 p-0">
+                <div class="col-12">
+                    <div class="d-flex justify-content-center align-items-center row pb-0">
+                        <input type="range" class="form-range h-auto col-11 rangePlayerMusic" oninput="moveTimeMusic(this.value)" placeholder="" disabled />
+                    </div>
+                    <div class="row align-items-end justify-content-center">
+                        <div class="col-5">
+                            <div class="align-self-start textCurrentTimePlayerMusic">00:00:00</div>
+                        </div>
+                        <div class="col-6 text-end">
+                            <div class="align-self-end textEndTimePlayerMusic">00:00:00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row w-100 ">
+                <div class="float-star">
+                    <button class="bi bi-heart border-0 bg-dark rounded-circle ms-5 p-2 mt-3" title="Añadir a la playlist"></button>
+                </div>
+
+                <div class="col-12 d-flex justify-content-center align-items-center">
+
+                    <div class="d-flex justify-content-between bg-dark align-items-center ">
+                        <button class="bi bi-skip-start-fill border-0 bg-transparent btn-player" disabled></button>
+                        <button class="bi bi-play-circle-fill border-0 bg-transparent mx-3 btn-player btn_player_audio"></button>
+                        <button class="bi bi-skip-end-fill border-0 bg-transparent btn-player" disabled></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="bg-black row position-fixed bottom-0 w-100" id="playerDiv">
+    <div class="container-fluid h-100">
+        <div class="row">
+            <div class="col-4 bg-black row">
+                <div class="card bg-black border-0">
+                    <div class="row g-0">
+                        <div class="col-4 d-flex justify-content-center align-items-center">
+                            <img src="..." class="img-fluid rounded-2" style="width:56px; height:56px" alt="...">
+                        </div>
+                        <div class="col-7">
+                            <div class="card-body">
+                                <h5 class="card-title m-0 playerMusicTitle">Music title</h5>
+                                <p class="card-text"><small class="text-body-secondary playerArtistData">Artist</small></p>
+                            </div>
+                        </div>
+                        <div class="col-1 d-flex justify-content-center align-items-center">
+                            <button class="bi bi-heart border-0 bg-transparent" title="Añadir a la playlist"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 bg-black h-100 ">
+                <div class="row d-flex justify-content-center align-items-center">
+                    <div class="d-flex justify-content-center align-items-center p-0" id="btnPlayerContainer" style="height:50px">
+                        <button class="bi bi-shuffle border-0 bg-transparent btn-lg me-2 btn-player" disabled></button>
+                        <button class="bi bi-skip-start-fill border-0 bg-transparent btn-player" disabled></button>
+                        <button class="bi bi-play-circle-fill border-0 bg-transparent mx-3 btn-player " onclick="play()" disable></button>
+                        <button class="bi bi-skip-end-fill border-0 bg-transparent btn-player" disabled></button>
+                        <button class="bi bi-arrow-counterclockwise border-0 bg-transparent ms-2 btn-player" disabled></button>
+                    </div>
+                </div>
+                <div class="row d-flex justify-content-center align-items-center pb-3">
+                    <div class="d-flex justify-content-center align-items-center ">
+                        <span class="textCurrentTimePlayerMusic">00:00:00</span>
+                        <input type="range" value="player.Progress" class="form-range w-75 h-100 mx-2 rangePlayerMusic" oninput="moveTimeMusic(this.value)" placeholder="" />
+                        <span class="textEndTimePlayerMusic"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 bg-black h-100 row">
+                <div class="d-flex h-100 justify-content-end mt-3" id="optionPlayerContoiner">
+                    <button class="bi bi-music-note-list border-0 bg-transparent float-start" title="Lista de reproduccion"></button>
+                    <div class="d-flex justify-content-center align-content-center">
+                        <button class="bi bi-volume-down-fill border-0 bg-transparent align-self-center btn_player_audio" onclick="mute()" title="Mute btn"></button>
+                        <input type="range" value="player.Volume" class="form-range w-50 h-100 mx-1" id="playerVolumeInput" min="0" max="100" oninput="volume(this.value / 100)" placeholder="volumen" />
+                    </div>
+                    <button class="bi bi-arrows-angle-expand border-0 bg-transparent btn-palyer-expand" onclick="toggleFullScreen()" title="Expandir"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

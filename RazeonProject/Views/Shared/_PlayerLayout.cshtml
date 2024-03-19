@@ -1,0 +1,225 @@
+﻿@using System.Text.Json
+@using System.Security.Claims
+@{
+    string idUser = Context.User.Claims.FirstOrDefault(c => c.Type == "IdUser")!.Value;
+    string RolId = Context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)!.Value;
+    Player? player = memoryCache.Get<Player>("PLAYER");
+}
+<html data-bs-theme="dark">
+<head>
+    <script src="~/js/JQuery/code.jquery.com_jquery-3.7.1.min.js"></script>
+    <script src="~/BootStrap/js/bootstrap.bundle.min.js"> </script>
+    <script src="~/js/Howler/howler.core.js"></script>
+    <script src="~/js/PlayerLayout/Player.js"></script>
+    <script src="~/js/ViewTransition/ViewTransition.js"></script>
+    <link rel="stylesheet" href="~/BootStrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/BootStrap/css/bootstrap-grid.rtl.css">
+    <link rel="stylesheet" href="~/BootStrap/bootstrap-icons/font/bootstrap-icons.min.css" />    
+    <link rel="stylesheet" href="~/sweetalert2-11.10.6/package/dist/sweetalert2.min.css" />
+    <link rel="stylesheet" href="~/slick-1.8.1/slick/slick.css" />
+    <link rel="stylesheet" href="~/slick-1.8.1/slick/slick-theme.css" />
+    <script src="~/sweetalert2-11.10.6/package/dist/sweetalert2.min.js"></script>
+    <script src="~/slick-1.8.1/slick/slick.min.js"></script>
+    <script src="~/js/NotifyRequest/toastedSweetAlert.js"></script>
+    <script id="scriptPartialView" ></script>
+    <link rel="stylesheet" id="sheetPartialView" />
+</head>
+<body class="bg-black">
+    <header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow">
+        <span class="navbar-brand ms-3 text-white d-inline">
+            <i class="bi bi-arrow-left-circle btn-navegator-left" onmouseover="ChangeIcon(this)" onmouseout="ChangeIcon(this)" onclick="HystoryBackward()"></i><i class="m-3 bi bi-arrow-right-circle btn-navegator-right" onmouseover="ChangeIcon(this)" onmouseout="ChangeIcon(this)" onclick="HystoryForward()"></i>
+        </span>
+        <button class="nav-link text-white d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-list"></i>
+        </button>
+        <div class="justify-content-end float-end">
+            <button type="button" class="btn btn-secondary dropdown-toggle bg-transparent border-0" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                <img src="~/assets/imgs/userImage.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" asp-controller="Razeon" asp-action="Profile" asp-route-User_ID="@idUser" >Ver Perfil</a></li>
+                <li><a class="dropdown-item" asp-controller="Razeon" asp-action="LogOut" >Cerrar Sesion</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="container-fluid">        
+        <div class="row">
+            <div class="sidebar border border-right col-2 p-0 border-0">
+                <div class="offcanvas-md offcanvas-end bg-black" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel" aria-modal="true" role="dialog">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="sidebarMenuLabel">Company name</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu" ></button>
+                    </div>
+                    <div class="offcanvas-body d-md-flex flex-column p-0 pt-2 vh-100 px-1">
+                        <ul class="nav flex-column rounded-2  bg-body-tertiary">
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2" asp-action="Home" asp-controller="Razeon">
+                                <i class="bi bi-house-door"></i>
+                                   Inicio
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                                    <i class="bi bi-search"></i>
+                                    Buscar
+                                </a>
+                            </li>
+                            @if(RolId == "2"){
+                            <li class="nav-item">
+                                    <a class="nav-link d-flex align-items-center gap-2" asp-controller="Razeon" asp-action="FormAlbum">
+                                    <i class="bi bi-file-music"></i>
+                                    Crear Album
+                                </a>
+                            </li>
+                            }
+                        </ul>
+                        <hr class="my-3">
+
+                        <h6 class="sidebar-heading d-inline align-items-center px-1 mb-2 text-body-secondary text-uppercase">
+                            <i class="bi bi-bookmarks-fill m"></i>
+                            Armario
+                            <a class="link-secondary float-end" href="#" aria-label="Agregar un nuevo informe"  style="direction: ltr; text-align: left;">
+                                <i class="bi bi-bookmark-plus"></i>
+                            </a>
+                        </h6>
+                        <ul class="nav flex-column rounded-2" id="armario">
+                            <li class="nav-item">
+                                <div class="card border-0 rounded-0 card-list-armario">
+                                    <div class="card-header px-1 d-flex align-items-center row border-0">
+                                        <div class="col-5">
+                                            <img class="img-thumbnail p-0" src="https://th.bing.com/th/id/OIP.6MMa2g_P8UGnJgsiDiQ1LwHaEJ?rs=1&pid=ImgDetMain" />
+                                       </div>
+                                        <div class=" col-auto">
+                                            <span class="mb-0 fw-bold "> Nombre </span>
+                                            <div class="d-flex">
+                                                <span class="text-muted fw-light">Tipo</span> * <span class="text-muted fw-light">Propiedad</span>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                            </li>                              
+                        </ul>
+                    </div>
+                </div>
+            </div>            
+            <div class="col-md-9 ms-sm-auto col-lg-10 bg-black pt-2 pb-1">
+                <main class="bg-dark rounded-2 py-5 overflow-y-scroll overflow-x-hidden" id="containerRender">
+                    
+                </main>
+            </div>                       
+        </div>
+        @await Html.PartialAsync("Player/_Player")
+    </div>       
+</body>
+</html>
+    @if (player is not null)
+    {
+    <script>
+        var playerData = @Html.Raw(JsonSerializer.Serialize(player));
+        console.log(playerData);   
+    </script>
+    }
+<script>   
+    $(function(){        
+        if (window.location.pathname == "/Razeon") {
+            window.location.pathname = "/Razeon/Home"
+        }
+    })
+
+    function ChangeIcon(element) {
+        if (element.classList.contains("btn-navegator-left")){
+            if (element.classList.contains("bi-arrow-left-circle")) {
+                element.classList.remove("bi-arrow-left-circle");
+                element.className += " bi-arrow-left-circle-fill";
+            } else {
+                element.classList.remove("bi-arrow-left-circle-fill");
+                element.className += " bi-arrow-left-circle";
+            }
+        }
+        if (element.classList.contains("btn-navegator-right")) {
+            if (element.classList.contains("bi-arrow-right-circle")) {
+                element.classList.remove("bi-arrow-right-circle");
+                element.className += " bi-arrow-right-circle-fill";
+            } else {
+                element.classList.remove("bi-arrow-right-circle-fill");
+                element.className += " bi-arrow-right-circle";
+            }
+        }
+    }
+    function HystoryForward() {
+        history.forward();
+    }
+    function HystoryBackward() {
+        history.back();
+    }
+</script>
+
+<style>
+    html, body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden
+    }
+
+    #sidebarMenu ul li a {
+        color:lightgray;
+    }
+
+    #sidebarMenu ul li a:hover {
+        color: antiquewhite
+    }
+
+    #sidebarMenu ul li a:hover {
+        color: antiquewhite
+    }
+
+    #containerRender{
+        height:80vh;
+        scroll-behavior: smooth;
+        overflow-y: scroll;
+        transition: opacity 0.3s ease;
+    }
+
+    .card-list-armario:hover{
+        background-color:dimgrey;
+    }
+
+    #btnPlayerContainer .btn-player.bi-play-circle-fill ,
+    #btnPlayerContainer .btn-player.bi-pause-circle-fill {
+        font-size: 30px;
+    }
+
+    #btnPlayerContainer .btn-player.bi-skip-end-fill ,
+    #btnPlayerContainer .btn-player.bi-skip-start-fill {
+        font-size: 20px;
+    }
+
+    #btnPlayerContainer .btn-player.bi-arrow-counterclockwise,
+    #btnPlayerContainer .btn-player.bi-shuffle {
+         font-size: 15px;
+    }
+
+    #optionPlayerContoiner btn{
+        font-size:20px;
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: none;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #ffffff24;
+        border-bottom-left-radius: 100%;
+        border-top-left-radius: 100%;
+        background: -webkit-linear-gradient(left, #ffffff00,#ffffff33)
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+</style>

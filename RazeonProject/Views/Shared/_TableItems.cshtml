@@ -1,0 +1,129 @@
+﻿@using System.Text.RegularExpressions
+@using System.Text.Json
+@model List<Object>
+
+@{
+    Type? type = Model.FirstOrDefault()?.GetType();
+}
+
+@functions {
+    public bool CleanTableView(string value)
+    {
+        bool showId = TempData.ContainsKey("showId") ? (bool)TempData["showId"]! : true;
+        var regex = new Regex(@"id", RegexOptions.IgnoreCase);
+        if (showId)
+        {
+            return true;
+        }
+        if (regex.IsMatch(value))
+        {
+            return false;
+        }
+        return true;
+    }
+}
+    <table class="table table-hover rounded-1 overflow-hidden table-responsive" id="table-data">
+        <thead class="thead-dark text-center">
+            <tr>
+                @foreach (var field in type!.GetProperties())
+                {
+                    @if (CleanTableView(field.Name))
+                    {
+                        <th scope="col">
+                            @field.Name
+                        </th>
+                    }
+                }
+                <th class="th_container_button">
+                    Opciones
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count() <= 0)
+            {
+                
+            <tr class="row-item-list">
+                @foreach (var field in type!.GetProperties())
+                {
+                    <td class="justify-content-center text-center" style="@(CleanTableView(field.Name) ? "" : "display: none;")">
+                        @if (field.PropertyType == typeof(byte[]))
+                        {                            
+                             <input type="file" class="form-control" name="@field.Name">                            
+                        }
+                        else
+                        {
+                            <textarea class="form-control border-0 bg-transparent p-0 text-center" id="CellDataTable-@field.Name" name="@field.Name"
+                                      rows="auto" type="text"></textarea>
+                        }
+                    </td>
+                }             
+                <td class="w-auto align-middle p-0 buttons-table-container">
+                    <button class="col-auto mr-auto btn btn-outline-primary py-1 px-2 mx-2 border-0" type="button" onclick="AddItem(this)">
+                        <i class="bi bi-save"></i>
+                    </button>
+                    <button class="col-auto mr-auto btn btn-outline-danger py-1 px-2 mx-2 border-0" type="button" onclick="(() => {DeleteItem(this); this.closest('tr').remove();})()">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                    <button class="col-auto mr-auto btn btn-outline-success py-1 px-2 mx-2 border-0" type="button" onclick="GetItem(this)">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </td>
+            </tr>
+            }
+
+            @foreach (var item in Model)
+            {
+                <tr class="row-item-list">             
+                    @foreach (var field in type!.GetProperties())
+                    {                        
+                    <td class="justify-content-center text-center" style="@(CleanTableView(field.Name) ? "" : "display: none;")">
+                        @if (field.PropertyType == typeof(byte[]))
+                        {
+                            @if (field.Name.Contains("img"))
+                            {
+                                @if (field.GetValue(item) != null)
+                                {
+                                    var byteArray = (byte[])field.GetValue(item)!;
+                                    var base64String = Convert.ToBase64String(byteArray);
+                                    <img src="data:image/jpg;base64,@base64String" />                                        
+                                }
+                            }
+                            else
+                            {
+                                <input type="file" class="form-control" accept="audio/mpeg3" name="@field.Name">
+                            }
+                        }
+                        else
+                        {
+                            <textarea class="form-control border-0 bg-transparent p-0 text-center" id="CellDataTable-@field.Name" name="@field.Name" 
+                                rows="auto" type="text">@field.GetValue(item)</textarea>
+                        }   
+                    </td>                           
+                    }
+                    @{
+                        string JsonItem = JsonSerializer.Serialize(item);
+                    }
+                    <td class="w-auto align-middle p-0 buttons-table-container">
+                        <button class="col-auto mr-auto btn btn-outline-primary py-1 px-2 mx-2 border-0" type="button" onclick="AddItem(this)">
+                            <i class="bi bi-save"></i>
+                        </button>
+                        <button class="col-auto mr-auto btn btn-outline-danger py-1 px-2 mx-2 border-0" type="button" onclick="(() => { DeleteItem(this); this.closest('tr').remove();})()">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                        <button class="col-auto mr-auto btn btn-outline-success py-1 px-2 mx-2 border-0" type="button" onclick="GetItem(this)">
+                            <i class="bi bi-eye"></i>
+                        </button>               
+                    </td>
+                </tr>
+            }       
+        </tbody>            
+    </table>
+<button class="btn btn-outline-success w-100" 
+    onclick="AddRow(@JsonSerializer.Serialize(type.GetProperties().Select(prop => new {
+                                                                                    Name = prop.Name, 
+                                                                                    Type = prop.PropertyType.Name 
+                                                                                })
+))">
+    <i class="bi bi-plus-square"></i>
+</button>

@@ -1,0 +1,135 @@
+﻿@using System.Text.Json
+@model User
+@{
+    string? JsonItems = ViewData["items"]?.ToString();
+    Items_Artist? items_Artist = null;
+    if(JsonItems != null)
+    {
+        items_Artist = JsonSerializer.Deserialize<Items_Artist>(JsonItems);
+    }
+}
+
+<div class="container">
+    <div class="col-auto">
+        <div class="overflow-hidden">
+            <div class="row d-flex">
+                <div class="px-4 pt-0 pb-4 cover">
+                    <div class="media align-items-end profile-head">
+                        <button class="btn btn-outline-light btn-sm float-end">Edit profile</button>
+                        <div class="profile d-flex mr-3">
+                            <img src="/assets/imgs/userImage.jpg" alt="..." width="130" height="130" class=" rounded-circle">
+                            <h4 class="m-3">@Model.Name</h4>
+                        </div>
+                        <div class="media-body mb-5 text-white">
+                        </div>
+                        <div class=" p-4 d-flex justify-content-end text-center">
+                            <ul class="list-inline mb-0">
+                                <li class="list-inline-item">
+                                    <h5 class="font-weight-bold mb-0 d-block">215</h5>
+                                    <small class="text-muted">
+                                        <i class="fas fa-image mr-1"></i>Photos
+                                    </small>
+                                </li>
+                                <li class="list-inline-item">
+                                    <h5 class="font-weight-bold mb-0 d-block">745</h5>
+                                    <small class="text-muted"> <i class="fas fa-user mr-1"></i>Followers</small>
+                                </li>
+                                <li class="list-inline-item">
+                                    <h5 class="font-weight-bold mb-0 d-block">340</h5>
+                                    <small class="text-muted"> <i class="fas fa-user mr-1"></i>Following</small>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="py-4 px-4 m-4 rounded shadow-lg row-lg">
+                
+                <div>
+                    @if (items_Artist != null)
+                    {
+                        @if (items_Artist.Albums.Count > 0)
+                        {
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <h5 class="mb-0">Álbumes de @Model.Name</h5>
+                            </div>
+                            <div class="slick-list">
+                                @foreach (Album album in items_Artist.Albums)
+                                {
+                                    if (album.Image != null)
+                                    {
+                                        <div class="card px-3 music-card-item" data-itemId="@album.Id" data-itemType="@album.GetType().Name">
+                                            <div class="cover">
+                                                <img src="data:image;base64,@Convert.ToBase64String(album.Image)" alt="Imagen del álbum" alt="cover" />
+                                                <div class="play-icon">
+                                                    <i class="bi bi-play-fill text-dark"></i>
+                                                </div>
+                                            </div>
+                                            <div class="card-content">
+                                                <h4><a href="#">@album.Name</a></h4>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        }
+
+                        @if (items_Artist.Tracks.Count > 0)
+                        {
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <h5 class="mb-0">Canciones de @Model.Name</h5>
+                            </div>
+                            <div class="slick-list">
+                                @foreach (Track track in items_Artist.Tracks)
+                                {
+                                    if (track.Image != null)
+                                    {
+                                        <div class="card music-card-item " data-itemId="@track.Id" data-itemType="@track.GetType().Name">
+                                            <div class="cover">
+                                                <img src="data:image;base64,@Convert.ToBase64String(track.Image)" alt="Imagen del álbum" alt="cover" />
+                                                <div class="play-icon">
+                                                    <i class="bi bi-play-fill text-dark"></i>
+                                                </div>
+                                            </div>
+                                            <div class="card-content">
+                                                <h4><a href="#">@track.Title</a></h4>
+                                                
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        }
+
+                        @if (items_Artist.Playlists.Count > 0)
+                        {
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <h5 class="mb-0">Playlist de @Model.Name</h5>
+                            </div>
+                            <div class="slick-list">
+                                @foreach (Playlist playlist in items_Artist.Playlists)
+                                {
+                                    if (playlist.Image != null)
+                                    {
+                                        <div class="card music-card-item" data-itemId="@playlist.Id" data-itemType="@playlist.GetType().Name">
+                                            <div class="cover">
+                                                <img src="data:image;base64,@Convert.ToBase64String(playlist.Image)" alt="Imagen del álbum" width="100" height="100" alt="cover" />
+                                                <div class="play-icon">
+                                                    <i class="bi bi-play-fill text-dark"></i>
+                                                </div>
+                                            </div>
+                                            <div class="card-content">
+                                                <h4><a href="#">@playlist.Name</a></h4>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        }
+                    }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

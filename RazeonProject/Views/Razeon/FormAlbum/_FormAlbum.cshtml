@@ -1,0 +1,63 @@
+﻿@using System.Security.Claims
+@{
+    string idUser = Context.User.Claims.FirstOrDefault(c => c.Type == "IdUser")!.Value;
+    string nameUser = Context.User.FindFirst(ClaimTypes.Name)!.Value;    
+    List<Track> album = new List<Track> { new Track() };
+    TempData["showId"] = false;
+}
+
+<div class="w-100">
+    <div class="col-auto">
+        <div class="overflow-hidden">
+            <div class="row d-flex">
+                <div class="px-4 pt-0 pb-4 cover">
+                    <div class="media align-items-end profile-head">
+                        <button class="btn btn-success btn-sm float-end" id="buttonActionType" onclick="CreateAlbum(@idUser)">Crear Album</button>
+                        <div class="profile d-flex mr-3">
+                            <label data-id="imgInputAlbum-lbl" class="p-2 d-flex" for="imgInputAlbum">
+                                <img id="previewImage" src="..." alt="Añade Imagen de Album"
+                                        width="150" height="150" class="img-responsive rounded-2 justify-content-center fw-bold">
+                                <i class="bi bi-plus-square-fill ms-1"></i>
+                            </label>
+                            <input type="file" id="imgInputAlbum" class="d-none" accept="image/*" required>
+                            <input class="m-3 bg-transparent text-white border-0 h-25 align-self-center fw-bold" id="nameInputAlbum" placeholder="Album Name" required/>
+                        </div>                     
+                    </div>                
+                    <div class="row pt-4 float-end">                    
+                        <div class="col-auto">
+                            @* <ul class="list-inline pt-3 mb-0">
+                                <li class="list-inline-item">
+                                    <h5 class="font-weight-bold fs-6 mb-0 d-block">215</h5>
+                                    <small class="text-muted">
+                                        <i class="bi bi-images"></i>Photos
+                                    </small>
+                                </li>
+                                <li class="list-inline-item">
+                                    <h5 class="font-weight-bold fs-6 mb-0 d-block">745</h5>
+                                    <small class="text-muted"> 
+                                        <i class="bi bi-people-fill"></i>Followers
+                                    </small>
+                                </li>                               
+                            </ul> *@
+                        </div>
+                        <div class="col-3 d-flex text-body-secondary ">
+                            <p class="pb-3 mb-0 ">
+                                <strong class="d-block text-gray-dark">@nameUser</strong>
+                                BirthDate
+                            </p>
+                            <img class="bd-placeholder-img flex-shrink-0 me-2 rounded-circle" src="@Url.Content("~/assets/imgs/userImage.jpg")" width="60" height="60" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="py-4 px-4 m-4 rounded shadow-lg">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h5 class="mb-0">Canciones del Album</h5>
+                </div>
+                <div class="slick-list">
+                    <partial name="_TableItems" model="@album.Cast<Object>().ToList()" />                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
